@@ -8,7 +8,9 @@ public class PlayerController : MonoBehaviour
 {
     public Rigidbody2D rb;
     public float speed;
+    public GameObject gameWonPanel;
     private bool _takeRest = false;
+    private bool _isGameWon = false;
 
 
     void Update()
@@ -22,33 +24,34 @@ public class PlayerController : MonoBehaviour
     // This function is called every fixed framerate frame, if the MonoBehaviour is enabled.
     protected void FixedUpdate()
     {
-        if (_takeRest == false)
-        {
-            if (Input.GetAxis("Horizontal") > 0)
+        if (!_isGameWon)
+            if (_takeRest == false)
             {
-                rb.AddForce(transform.right * (speed * rb.mass)); // Accelerate with time
-            }
+                if (Input.GetAxis("Horizontal") > 0)
+                {
+                    rb.AddForce(transform.right * (speed * rb.mass)); // Accelerate with time
+                }
 
-            else if (Input.GetAxis("Horizontal") < 0)
-            {
-                rb.AddForce(-transform.right * (speed * rb.mass));
-            }
+                else if (Input.GetAxis("Horizontal") < 0)
+                {
+                    rb.AddForce(-transform.right * (speed * rb.mass));
+                }
 
-            else if (Input.GetAxis("Vertical") > 0)
-            {
-                rb.AddForce(transform.up * (speed * rb.mass));
-            }
+                else if (Input.GetAxis("Vertical") > 0)
+                {
+                    rb.AddForce(transform.up * (speed * rb.mass));
+                }
 
-            else if (Input.GetAxis("Vertical") < 0)
-            {
-                rb.AddForce(-transform.up * (speed * rb.mass));
-            }
+                else if (Input.GetAxis("Vertical") < 0)
+                {
+                    rb.AddForce(-transform.up * (speed * rb.mass));
+                }
 
-            else if (Input.GetAxis("Horizontal") == 0 && Input.GetAxis("Vertical") == 0)
-            {
-                rb.velocity = Vector2.zero;
+                else if (Input.GetAxis("Horizontal") == 0 && Input.GetAxis("Vertical") == 0)
+                {
+                    rb.velocity = Vector2.zero;
+                }
             }
-        }
     }
 
     // Sent when another object enters a trigger collider attached to this object (2D physics only).
@@ -57,6 +60,7 @@ public class PlayerController : MonoBehaviour
         if (other.CompareTag("Door"))
         {
             Debug.Log("Level Complete!");
+            gameWonPanel.SetActive(true);
         }
     }
 }
