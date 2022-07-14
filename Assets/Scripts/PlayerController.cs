@@ -3,14 +3,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
     public Rigidbody2D rb;
     public float speed;
     public GameObject gameWonPanel;
+    public GameObject gameLostPanel;
     private bool _takeRest = false;
-    private bool _isGameWon = false;
+    private bool _isGameOver = false;
 
 
     void Update()
@@ -24,7 +26,7 @@ public class PlayerController : MonoBehaviour
     // This function is called every fixed framerate frame, if the MonoBehaviour is enabled.
     protected void FixedUpdate()
     {
-        if (!_isGameWon)
+        if (!_isGameOver)
             if (_takeRest == false)
             {
                 if (Input.GetAxis("Horizontal") > 0)
@@ -54,13 +56,25 @@ public class PlayerController : MonoBehaviour
             }
     }
 
-    // Sent when another object enters a trigger collider attached to this object (2D physics only).
     protected void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Door"))
         {
             Debug.Log("Level Complete!");
             gameWonPanel.SetActive(true);
+            _isGameOver = true;
         }
+        
+        else if (other.CompareTag("Enemy"))
+        {
+            Debug.Log("Level Not Complete!");
+            gameLostPanel.SetActive(true);
+            _isGameOver = true;
+        }
+    }
+
+    public void RestartGame()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }
